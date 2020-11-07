@@ -2,6 +2,8 @@
 
 Supporting package for Moor, that allows exporting SQL-based Moor database to a CSV form, for external storage or sharing. Works on all platforms except Web.
 
+----
+
 ## Usage Steps
 
 First, perform necessary steps to provide Storage capability in the device you are developing for.
@@ -31,7 +33,7 @@ Example: Editing `android\app\src\main\AndroidManifest.xml` and [providing permi
         class Database extends _$Database {
           Database(QueryExecutor e) : super(e);
           final cs = ChangeStack();
-          
+
           @override
           int get schemaVersion => 1;
 
@@ -67,6 +69,8 @@ Example: `List<Employee> _employees = await db.getAllEmployees(orderBy: 'id');` 
     a. **Android and IoS:** Your Flutter App's internal Storage directory (eg. `Android\Data\com.*.*\appName` for Android), provided the permissions were given and the CSV was succesfully generated.
 
     b. **Desktop Systems:** Downloads Directory.
+
+----
 
 ## Dependencies
 
