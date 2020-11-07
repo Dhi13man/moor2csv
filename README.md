@@ -1,4 +1,4 @@
-# moorSQL2CSV
+# moor2csv
 
 Supporting package for Moor, that allows exporting SQL-based Moor database to a CSV form, for external storage or sharing. Works on all platforms except Web.
 
