@@ -7,7 +7,7 @@ Supporting package for Moor, that allows exporting SQL-based Moor database to a 
 First, perform necessary steps to provide Storage capability in the device you are developing for.
 Example: Editing `android\app\src\main\AndroidManifest.xml` and [providing permissions](https://developer.android.com/about/versions/11/privacy/permissions) for Android.
 
-1. Set up a Moor Database in your flutter project and create necessary Data Structures and tables.
+1. Set up a Moor Database in your flutter project and create necessary Data Structures and tables. Example:
 
         import 'package:moor/moor.dart';
         import 'package:undo/undo.dart';
