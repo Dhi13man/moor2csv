@@ -6,7 +6,6 @@ import 'package:moor2csv/moor2csv.dart';
 
 import 'database_test.dart';
 
-
 void main() {
   String _csvFileName = 'table';
 
@@ -17,11 +16,13 @@ void main() {
     Employee(employeeID: '4', name: 'testD', phoneNo: 132123124, deviceID: 's'),
   ]; // Replaced with values from database in actual implementation using select query get()
 
-  test('Tries creating CSV file with desktop settings (since debugging in pure dart)', () async {
+  test(
+      'Tries creating CSV file with desktop settings (since debugging in pure dart)',
+      () async {
     final csvGen = MoorSQLToCSV(employees, csvFileName: _csvFileName);
     // Test if internal structure of class working.
     bool wasCreated = await csvGen.wasCreated;
-    expect(wasCreated,  true);
+    expect(wasCreated, true);
   });
 
   // Test if CSV file actually created
@@ -29,13 +30,13 @@ void main() {
     final csvGen = MoorSQLToCSV(employees, csvFileName: _csvFileName);
 
     // Test if internal structure of class working.
-    bool wasCreated = await csvGen.wasCreated;
+    await csvGen.wasCreated;
     Directory _directoryOnDesktop = await getDownloadsDirectory();
     String fullPath = '${_directoryOnDesktop.path}/$_csvFileName.csv';
     File testFilePointer = File(fullPath);
 
     bool doesExist = await testFilePointer.exists();
-    expect(doesExist,  true);
+    expect(doesExist, true);
   });
 
   // Run Final Test by checking the CSV file in location yourself.

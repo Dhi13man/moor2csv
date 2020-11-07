@@ -125,7 +125,6 @@ Example: `List<Employee> _employees = await db.getAllEmployees(orderBy: 'id');` 
 
 ----
 
-
 ## Getting Started
 
 This project is a starting point for a Dart
