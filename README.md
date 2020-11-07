@@ -1,6 +1,6 @@
 # moorSQL2CSV
 
-Supporting package for Moor, that allows us to export our SQL-based Moor database to a CSV form for external storage or sharing. Works on all platforms except Web.
+Supporting package for Moor, that allows exporting SQL-based Moor database to a CSV form, for external storage or sharing. Works on all platforms except Web.
 
 ## Usage Steps
 
@@ -12,7 +12,7 @@ Example: Editing `android\app\src\main\AndroidManifest.xml` and [providing permi
         import 'package:moor/moor.dart';
         import 'package:undo/undo.dart';
 
-        // ****** Employee Data Structure for Table ***** //
+        // ****** Employee Data Structure for Table *****
         class Employees extends Table {
           TextColumn get employeeID => text()();
           TextColumn get name => text().withLength(max: 100).nullable()();
@@ -22,7 +22,8 @@ Example: Editing `android\app\src\main\AndroidManifest.xml` and [providing permi
           Set<Column> get primaryKey => {employeeID};
         }
 
-        // ****** Moor Setup ******** //
+
+        // ****** Moor Setup ********
 
         part 'Database.g.dart';
 
@@ -31,25 +32,25 @@ Example: Editing `android\app\src\main\AndroidManifest.xml` and [providing permi
           Database(QueryExecutor e) : super(e);
           final cs = ChangeStack();
           
-        @override
-        int get schemaVersion => 1;
+          @override
+          int get schemaVersion => 1;
 
-        Future<List<Employee>> getAllEmployees(
-                  {String orderBy = 'asce', String mode = 'name'}) =>
-              (select(employees)
-                    ..orderBy([
-                      (u) {
-                        GeneratedTextColumn criteria = employees.employeeID;
-                        OrderingMode order =
-                            (mode == 'desc') ? OrderingMode.desc : OrderingMode.asc;
-                        if (orderBy == 'id') criteria = employees.employeeID;
-                        if (orderBy == 'name') criteria = employees.name;
-                        if (orderBy == 'device') criteria = employees.deviceID;
-                        return OrderingTerm(expression: criteria, mode: order);
-                      }
-                    ]))
-                  .get();
-        ...
+          Future<List<Employee>> getAllEmployees(
+                    {String orderBy = 'asce', String mode = 'name'}) =>
+                (select(employees)
+                      ..orderBy([
+                        (u) {
+                          GeneratedTextColumn criteria = employees.employeeID;
+                          OrderingMode order =
+                              (mode == 'desc') ? OrderingMode.desc : OrderingMode.asc;
+                          if (orderBy == 'id') criteria = employees.employeeID;
+                          if (orderBy == 'name') criteria = employees.name;
+                          if (orderBy == 'device') criteria = employees.deviceID;
+                          return OrderingTerm(expression: criteria, mode: order);
+                        }
+                      ]))
+                    .get();
+          ...
         } db;
 
 2. Run a query to get your `List<DataClass>` item from the Database.  
@@ -123,6 +124,7 @@ Example: `List<Employee> _employees = await db.getAllEmployees(orderBy: 'id');` 
 2. Better documentation.
 
 ----
+
 
 ## Getting Started
 
