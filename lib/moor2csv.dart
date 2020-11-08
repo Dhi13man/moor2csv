@@ -10,7 +10,8 @@ import 'package:permission_handler/permission_handler.dart';
 class MoorSQLToCSV {
   final List<DataClass> _table; // Passed as parameter to Class constructor.
   String csvFileName; // Passed as parameter to Class constructor.
-  String _pathToFile;
+  String
+      _pathToFile; // Saves the path to the generated file here once generation is done.
 
   Future<File> _file;
   bool _permitted = true, _prExisting;
@@ -27,14 +28,20 @@ class MoorSQLToCSV {
   /// Pass [_table] is a List<DataClass> that the utility iterates over, to generate CSV.
   ///  [csvFileName] is the file name that generated CSV is to be stored as
   MoorSQLToCSV(this._table, {this.csvFileName = 'table'}) {
-    String _csvBody = _generateCSVBody();
-    _pathToFile = 'No file created yet!'; // Initial State
+    // Initial State
+    _pathToFile = 'No file created yet!';
+    this._prExisting =
+        false; // Assume file is not already existing. Will be modified later if it does.
 
+    // Ask for permission and save permission state to _permitted.
     getPermission().then((value) => _permitted = value);
-    this._file = _localFile(csvFileName);
-    this._prExisting = false;
 
-    _status = _writeToCSV(_csvBody);
+    // Generate File pointer.
+    this._file = _localFile(csvFileName);
+    // Generate the body of the CSV from the passed List<DataClass> _table
+    String _csvBody = _generateCSVBody();
+    // Finally, generated body of CSV to file
+    _status = _writeToCSV(_csvBody); // Also set status if successfully created.
   }
 
   /// Simple dart helper function to generate a String [out], which is the body of the generated CSV file.
@@ -68,7 +75,7 @@ class MoorSQLToCSV {
     return (permissionResult == PermissionStatus.granted);
   }
 
-  /// Gets path to permitted file writing directories depending on the OS.
+  /// Gets path to permitted file writing directories depending on the OS using path_provider package.
   Future<String> get _localPath async {
     Directory directory;
     if (Platform.isAndroid || Platform.isIOS)
@@ -95,9 +102,9 @@ class MoorSQLToCSV {
     return thisFile;
   }
 
-  /// Once everything else is handled final writing is done by this
+  /// Once everything else is handled, final writing is done by this member.
   ///
-  /// generates the file pointer with [_localFile] member,
+  /// Generates the file pointer with [_localFile] member,
   /// writes CSV String body [csvBody] to the created file pointer.
   Future<bool> _writeToCSV(String csvBody) async {
     // Write the file
