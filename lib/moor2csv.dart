@@ -6,7 +6,7 @@ import 'package:moor/moor.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-// Class handling the CSV generation.
+/// Class performing the entire CSV generation process.
 class MoorSQLToCSV {
   final List<DataClass> _table; // Passed as parameter to Class constructor.
   String csvFileName; // Passed as parameter to Class constructor.

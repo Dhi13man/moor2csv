@@ -58,5 +58,6 @@ Database createDb({bool logStatements = false}) {
 main() async {
   setUpDatabaseForDesktop();
   Database db = createDb();
+  // Insert something into the Database here.
   exportDatabase(db);
 }
