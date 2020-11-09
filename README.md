@@ -2,8 +2,7 @@
 
 Supporting package for Moor, that allows **exporting SQL-based Moor database to a CSV form**, for external storage or sharing. Works on all platforms except Web.
 
-
-#### Find Package on Official Dart Pub: 
+#### Find Package on Official Dart Pub
 
 [![moor2csv version](https://img.shields.io/pub/v/moor2csv.svg)](https://pub.dev/packages/moor2csv)
 
