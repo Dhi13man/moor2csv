@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:moor/ffi.dart';
 import 'package:moor/moor.dart';
-import 'package:moor2csv/moor2csv.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
@@ -11,6 +10,8 @@ import 'package:sqflite/sqflite.dart' as sql;
 import 'package:sqflite/sqflite.dart' show getDatabasesPath;
 import 'package:path/path.dart' as p;
 import 'database_test.dart';
+
+import 'package:moor2csv/moor2csv.dart';
 
 Future<bool> exportDatabase(Database db, {bool getEmployees = true}) async {
   MoorSQLToCSV _csvGenerator;

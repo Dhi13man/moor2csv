@@ -11,7 +11,7 @@ class MoorSQLToCSV {
   final List<DataClass> _table; // Passed as parameter to Class constructor.
   String csvFileName; // Passed as parameter to Class constructor.
   String
-      _pathToFile; // Saves the path to the generated file here once generation is done.
+      _pathToFile; // Saves the path to the generated file here once generation is done. (if failure, stores error)
 
   Future<File> _file;
   bool _permitted = true, _prExisting;
@@ -20,7 +20,7 @@ class MoorSQLToCSV {
   ///  Gets boolean signifying whether the CSV was created.
   Future<bool> get wasCreated => _status;
 
-  /// Gets path to directory where the CSV was created.
+  /// Gets path to directory where the CSV was created. (or error, if operation failed)
   String get pathToCSVDirectory => _pathToFile;
 
   /// Constructor of the MoorSQLToCSV class that gets the entire process started.
@@ -108,10 +108,15 @@ class MoorSQLToCSV {
   /// writes CSV String body [csvBody] to the created file pointer.
   Future<bool> _writeToCSV(String csvBody) async {
     // Write the file
-    final File thisFile = await _file;
-    if (!_permitted) _permitted = await getPermission();
-    if (!_permitted) return false; // Still not permitted. Error.
-    thisFile.writeAsString(csvBody);
-    return true; // Success
+    try {
+      final File thisFile = await _file;
+      if (!_permitted) _permitted = await getPermission();
+      if (!_permitted) return false; // Still not permitted. Error.
+      thisFile.writeAsString(csvBody);
+      return true; // Success
+    } catch (e) {
+      _pathToFile = 'Error Occured: ${e.toString()}';
+      return false;
+    }
   }
 }
