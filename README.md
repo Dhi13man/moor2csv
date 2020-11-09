@@ -98,10 +98,10 @@ Example: `List<Employee> _employees = await db.getAllEmployees(orderBy: 'id');` 
         MoorSQLToCSV _csvGenerator;
         bool didSucceed = true;
         if (getEmployees) {
-    List<Employee>_employees = await db.getAllEmployees(orderBy: 'id');
+          List<Employee>_employees = await db.getAllEmployees(orderBy: 'id');
           if (_employees.isNotEmpty) {
             _csvGenerator = MoorSQLToCSV(_employees, csvFileName: 'employees');
-    didSucceed = didSucceed && await_csvGenerator.wasCreated;
+            didSucceed = didSucceed && await_csvGenerator.wasCreated;
           }
         }
         if (getAttendances) {
@@ -112,10 +112,10 @@ Example: `List<Employee> _employees = await db.getAllEmployees(orderBy: 'id');` 
           }
         }
         if (getEvents) {
-    List<Event>_events = await db.getAllEvents();
+          List<Event>_events = await db.getAllEvents();
           if (_events.isNotEmpty) {
             _csvGenerator = MoorSQLToCSV(_events, csvFileName: 'events');
-    didSucceed = didSucceed && await_csvGenerator.wasCreated;
+            didSucceed = didSucceed && await_csvGenerator.wasCreated;
           }
         }
         return didSucceed;
