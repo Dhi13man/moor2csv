@@ -1,6 +1,11 @@
 # moor2csv
 
-Supporting package for Moor, that allows exporting SQL-based Moor database to a CSV form, for external storage or sharing. Works on all platforms except Web.
+Supporting package for Moor, that allows **exporting SQL-based Moor database to a CSV form**, for external storage or sharing. Works on all platforms except Web.
+
+
+#### Find Package on Official Dart Pub: 
+
+[![moor2csv version](https://img.shields.io/pub/v/moor2csv.svg)](https://pub.dev/packages/moor2csv)
 
 ----
 
@@ -71,6 +76,7 @@ Example: `List<Employee> _employees = await db.getAllEmployees(orderBy: 'id');` 
     b. **Desktop Systems:** Downloads Directory.
 
 ----
+<br/>
 
 ## Dependencies
 
@@ -120,12 +126,15 @@ Example: `List<Employee> _employees = await db.getAllEmployees(orderBy: 'id');` 
         }
         return didSucceed;
     }
+<br/>
 
 ## Potential Contribution Ideas
 
 1. Implement a way to view the generated CSVs that works across platforms. Right now I can't think of any. Tested out Open package and url_launcher with failure in one or more platforms. The only way to browse the generated CSVs is to manually browse to the storage folder.
 
 2. Better documentation.
+
+<br/>
 
 ----
 
