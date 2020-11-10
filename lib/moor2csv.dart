@@ -89,9 +89,13 @@ class MoorSQLToCSV {
 
   /// Generates the File pointer [thisFile] where the CSV body will then be written into.
   Future<File> _localFile(String name, {String initial = ''}) async {
-    final String path = await _localPath;
-    _pathToFile = '$path/$name.csv';
-    final File thisFile = File(_pathToFile);
+    try {
+      final String path = await _localPath;
+      _pathToFile = '$path/$name.csv';
+      final File thisFile = File(_pathToFile);
+    } catch (e) {
+      return null;
+    }
 
     // Try getting permission again if not already given.
     if (!_permitted) _permitted = await getPermission();
@@ -110,6 +114,9 @@ class MoorSQLToCSV {
     // Write the file
     try {
       final File thisFile = await _file;
+      // Occurs when file name is not proper
+      if (thisFile == null) throw ('Enter Valid Accessible File Name.');
+
       if (!_permitted) _permitted = await getPermission();
       if (!_permitted) return false; // Still not permitted. Error.
       thisFile.writeAsString(csvBody);
