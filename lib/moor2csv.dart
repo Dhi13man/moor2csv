@@ -51,14 +51,14 @@ class MoorSQLToCSV {
 
     // Create headings
     _template.forEach((key, value) {
-      out += '$key,';
+      out += '\"$key\",';
     });
     out = out.replaceRange(out.length, out.length, '\n');
 
     _table.forEach((element) {
       _template = element.toJson();
       _template.forEach((key, value) {
-        out += '$value,';
+        out += '\"$value\",';
       });
       out = out.replaceRange(out.length, out.length, '\n');
     });
@@ -93,17 +93,16 @@ class MoorSQLToCSV {
       final String path = await _localPath;
       _pathToFile = '$path/$name.csv';
       final File thisFile = File(_pathToFile);
+
+      // Try getting permission again if not already given.
+      if (!_permitted) _permitted = await getPermission();
+
+      _prExisting = await thisFile.exists();
+      if (!_prExisting) thisFile.writeAsString(initial);
+      return thisFile;
     } catch (e) {
       return null;
     }
-
-    // Try getting permission again if not already given.
-    if (!_permitted) _permitted = await getPermission();
-
-    _prExisting = await thisFile.exists();
-    if (!_prExisting) thisFile.writeAsString(initial);
-
-    return thisFile;
   }
 
   /// Once everything else is handled, final writing is done by this member.

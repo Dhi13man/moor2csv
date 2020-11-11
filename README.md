@@ -41,26 +41,12 @@ Example: Editing `android\app\src\main\AndroidManifest.xml` and [providing permi
           @override
           int get schemaVersion => 1;
 
-          Future<List<Employee>> getAllEmployees(
-                    {String orderBy = 'asce', String mode = 'name'}) =>
-                (select(employees)
-                      ..orderBy([
-                        (u) {
-                          GeneratedTextColumn criteria = employees.employeeID;
-                          OrderingMode order =
-                              (mode == 'desc') ? OrderingMode.desc : OrderingMode.asc;
-                          if (orderBy == 'id') criteria = employees.employeeID;
-                          if (orderBy == 'name') criteria = employees.name;
-                          if (orderBy == 'device') criteria = employees.deviceID;
-                          return OrderingTerm(expression: criteria, mode: order);
-                        }
-                      ]))
-                    .get();
+          Future<List<Employee>> getAllEmployees() => select(employees).get();
           ...
         } db;
 
 2. Run a query to get your `List<DataClass>` item from the Database.  
-Example: `List<Employee> _employees = await db.getAllEmployees(orderBy: 'id');` in an `async` function gets us our `List<DataClass>` item from database `db`.
+Example: `List<Employee> _employees = await db.getAllEmployees();` in an `async` function gets us our `List<DataClass>` item from database `db`.
 
 3. Simply Create a `MoorSQLtoCSV` object by passing in the the `List<DataClass>` object as parameter to it (and optionally the CSV file name to save it as) and it will do all the necessary work to export your Database to a CSV file. Example to store `_employees` object of type `Employee table` in `employees.csv`:
 
@@ -95,34 +81,15 @@ Example: `List<Employee> _employees = await db.getAllEmployees(orderBy: 'id');` 
 
 ## Example Usage
 
-    Future<bool> exportDatabase(
-          {bool getEmployees = true,
-          bool getAttendances = true,
-          bool getEvents = true}) async {
-        MoorSQLToCSV _csvGenerator;
-        bool didSucceed = true;
-        if (getEmployees) {
-          List<Employee>_employees = await db.getAllEmployees(orderBy: 'id');
-          if (_employees.isNotEmpty) {
-            _csvGenerator = MoorSQLToCSV(_employees, csvFileName: 'employees');
-            didSucceed = didSucceed && await_csvGenerator.wasCreated;
-          }
-        }
-        if (getAttendances) {
-          List<Attendance> _attendances = await db.getAllAttendances();
-          if (_attendances.isNotEmpty) {
-            _csvGenerator = MoorSQLToCSV(_attendances, csvFileName: 'attendances');
-            didSucceed = didSucceed && await _csvGenerator.wasCreated;
-          }
-        }
-        if (getEvents) {
-          List<Event>_events = await db.getAllEvents();
-          if (_events.isNotEmpty) {
-            _csvGenerator = MoorSQLToCSV(_events, csvFileName: 'events');
-            didSucceed = didSucceed && await_csvGenerator.wasCreated;
-          }
-        }
-        return didSucceed;
+    Future<bool> exportDatabase() async {
+      bool didSucceed = false;
+      List<Employee>_employees = await db.getAllEmployees();
+
+      if (_employees.isNotEmpty) {
+        MoorSQLToCSV _csvGenerator = MoorSQLToCSV(_employees, csvFileName: 'employees');
+        didSucceed = await_csvGenerator.wasCreated;
+      }
+      return didSucceed;
     }
 
 ----

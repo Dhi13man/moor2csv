@@ -13,3 +13,13 @@ Added error handling for file writing and optimized imports.
 ## [1.0.5] - 09th November, 2020
 
 Bug Fix from version 1.0.3.
+
+## [1.5.0] - 11th November, 2020
+
+Big update. Includes:
+
+1. Error handling when File not accessible.
+
+2. Generated CSVs in compliance with [Standard CSV Rules](https://tools.ietf.org/html/rfc4180).
+
+3. Slightly better documentaion.
