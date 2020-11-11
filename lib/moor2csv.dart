@@ -51,14 +51,14 @@ class MoorSQLToCSV {
 
     // Create headings
     _template.forEach((key, value) {
-      out += '\"$key\",';
+      out += '\"${key.toString()}\",';
     });
     out = out.replaceRange(out.length, out.length, '\n');
 
     _table.forEach((element) {
       _template = element.toJson();
       _template.forEach((key, value) {
-        out += '\"$value\",';
+        out += '\"${value.toString()}\",';
       });
       out = out.replaceRange(out.length, out.length, '\n');
     });

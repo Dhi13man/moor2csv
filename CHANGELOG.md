@@ -23,3 +23,7 @@ Big update. Includes:
 2. Generated CSVs in compliance with [Standard CSV Rules](https://tools.ietf.org/html/rfc4180).
 
 3. Slightly better documentaion.
+
+## [1.5.1] - 11th November, 2020
+
+Fix minor bugs with DateTime fields. toString() applied for values before parsing to CSV format.
