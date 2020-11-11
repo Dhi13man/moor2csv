@@ -40,10 +40,7 @@ class CustomJsonSerializer extends ValueSerializer {
 
   /// Override original toJson for DateTime as-is handling.
   dynamic toJson<T>(T value) {
-    if (value is DateTime) {
-      return value.toString();
-    }
-
+    if (value is DateTime) return value.toIso8601String();
     return value;
   }
 }

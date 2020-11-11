@@ -67,5 +67,41 @@ void main() {
     expect(doesExist, true);
   });
 
-  // Run Final Test by checking the CSV files in location yourself.
+  // Test if CSV generation keeps Dates and Times in Iso8601String form.
+  test(
+      'Checks if CSVs save Date Time exactly to Iso8601 String, from what they are in Classes.',
+      () async {
+    List<Attendance> _attendances = [
+      Attendance(
+        employeeID: '1',
+        attendanceCount: 1,
+        lastAttendance: DateTime.now(),
+      ),
+      Attendance(
+        employeeID: '22d1e12',
+        attendanceCount: 2,
+        lastAttendance: DateTime.now().toLocal(),
+      ),
+      Attendance(
+        employeeID: '22d3123_1e12',
+        attendanceCount: 2,
+        lastAttendance: DateTime.now().toUtc(),
+      ),
+    ]; // Replaced with values from database in actual implementation using select query get()
+
+    final csvGen =
+        MoorSQLToCSV(_attendances, csvFileName: '${_csvFileName}_dated');
+
+    // Internal structure of class working.
+    await csvGen.wasCreated;
+    Directory _directoryOnDesktop = await getDownloadsDirectory();
+    // Test if File actually generated
+    String fullPath = '${_directoryOnDesktop.path}/${_csvFileName}_dated.csv';
+    File testFilePointer = File(fullPath);
+
+    bool doesExist = await testFilePointer.exists();
+    expect(doesExist, true);
+  });
+
+  // Run Final Tests by checking the CSV files in location yourself.
 }

@@ -287,12 +287,270 @@ class $EmployeesTable extends Employees
   }
 }
 
+class Attendance extends DataClass implements Insertable<Attendance> {
+  final String employeeID;
+  final int attendanceCount;
+  final DateTime lastAttendance;
+  Attendance(
+      {@required this.employeeID,
+      @required this.attendanceCount,
+      this.lastAttendance});
+  factory Attendance.fromData(Map<String, dynamic> data, GeneratedDatabase db,
+      {String prefix}) {
+    final effectivePrefix = prefix ?? '';
+    final stringType = db.typeSystem.forDartType<String>();
+    final intType = db.typeSystem.forDartType<int>();
+    final dateTimeType = db.typeSystem.forDartType<DateTime>();
+    return Attendance(
+      employeeID: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}employee_i_d']),
+      attendanceCount: intType
+          .mapFromDatabaseResponse(data['${effectivePrefix}attendance_count']),
+      lastAttendance: dateTimeType
+          .mapFromDatabaseResponse(data['${effectivePrefix}last_attendance']),
+    );
+  }
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (!nullToAbsent || employeeID != null) {
+      map['employee_i_d'] = Variable<String>(employeeID);
+    }
+    if (!nullToAbsent || attendanceCount != null) {
+      map['attendance_count'] = Variable<int>(attendanceCount);
+    }
+    if (!nullToAbsent || lastAttendance != null) {
+      map['last_attendance'] = Variable<DateTime>(lastAttendance);
+    }
+    return map;
+  }
+
+  AttendancesCompanion toCompanion(bool nullToAbsent) {
+    return AttendancesCompanion(
+      employeeID: employeeID == null && nullToAbsent
+          ? const Value.absent()
+          : Value(employeeID),
+      attendanceCount: attendanceCount == null && nullToAbsent
+          ? const Value.absent()
+          : Value(attendanceCount),
+      lastAttendance: lastAttendance == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastAttendance),
+    );
+  }
+
+  factory Attendance.fromJson(Map<String, dynamic> json,
+      {ValueSerializer serializer}) {
+    serializer ??= moorRuntimeOptions.defaultSerializer;
+    return Attendance(
+      employeeID: serializer.fromJson<String>(json['employeeID']),
+      attendanceCount: serializer.fromJson<int>(json['attendanceCount']),
+      lastAttendance: serializer.fromJson<DateTime>(json['lastAttendance']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer serializer}) {
+    serializer ??= moorRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'employeeID': serializer.toJson<String>(employeeID),
+      'attendanceCount': serializer.toJson<int>(attendanceCount),
+      'lastAttendance': serializer.toJson<DateTime>(lastAttendance),
+    };
+  }
+
+  Attendance copyWith(
+          {String employeeID, int attendanceCount, DateTime lastAttendance}) =>
+      Attendance(
+        employeeID: employeeID ?? this.employeeID,
+        attendanceCount: attendanceCount ?? this.attendanceCount,
+        lastAttendance: lastAttendance ?? this.lastAttendance,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('Attendance(')
+          ..write('employeeID: $employeeID, ')
+          ..write('attendanceCount: $attendanceCount, ')
+          ..write('lastAttendance: $lastAttendance')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => $mrjf($mrjc(employeeID.hashCode,
+      $mrjc(attendanceCount.hashCode, lastAttendance.hashCode)));
+  @override
+  bool operator ==(dynamic other) =>
+      identical(this, other) ||
+      (other is Attendance &&
+          other.employeeID == this.employeeID &&
+          other.attendanceCount == this.attendanceCount &&
+          other.lastAttendance == this.lastAttendance);
+}
+
+class AttendancesCompanion extends UpdateCompanion<Attendance> {
+  final Value<String> employeeID;
+  final Value<int> attendanceCount;
+  final Value<DateTime> lastAttendance;
+  const AttendancesCompanion({
+    this.employeeID = const Value.absent(),
+    this.attendanceCount = const Value.absent(),
+    this.lastAttendance = const Value.absent(),
+  });
+  AttendancesCompanion.insert({
+    @required String employeeID,
+    this.attendanceCount = const Value.absent(),
+    this.lastAttendance = const Value.absent(),
+  }) : employeeID = Value(employeeID);
+  static Insertable<Attendance> custom({
+    Expression<String> employeeID,
+    Expression<int> attendanceCount,
+    Expression<DateTime> lastAttendance,
+  }) {
+    return RawValuesInsertable({
+      if (employeeID != null) 'employee_i_d': employeeID,
+      if (attendanceCount != null) 'attendance_count': attendanceCount,
+      if (lastAttendance != null) 'last_attendance': lastAttendance,
+    });
+  }
+
+  AttendancesCompanion copyWith(
+      {Value<String> employeeID,
+      Value<int> attendanceCount,
+      Value<DateTime> lastAttendance}) {
+    return AttendancesCompanion(
+      employeeID: employeeID ?? this.employeeID,
+      attendanceCount: attendanceCount ?? this.attendanceCount,
+      lastAttendance: lastAttendance ?? this.lastAttendance,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (employeeID.present) {
+      map['employee_i_d'] = Variable<String>(employeeID.value);
+    }
+    if (attendanceCount.present) {
+      map['attendance_count'] = Variable<int>(attendanceCount.value);
+    }
+    if (lastAttendance.present) {
+      map['last_attendance'] = Variable<DateTime>(lastAttendance.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('AttendancesCompanion(')
+          ..write('employeeID: $employeeID, ')
+          ..write('attendanceCount: $attendanceCount, ')
+          ..write('lastAttendance: $lastAttendance')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $AttendancesTable extends Attendances
+    with TableInfo<$AttendancesTable, Attendance> {
+  final GeneratedDatabase _db;
+  final String _alias;
+  $AttendancesTable(this._db, [this._alias]);
+  final VerificationMeta _employeeIDMeta = const VerificationMeta('employeeID');
+  GeneratedTextColumn _employeeID;
+  @override
+  GeneratedTextColumn get employeeID => _employeeID ??= _constructEmployeeID();
+  GeneratedTextColumn _constructEmployeeID() {
+    return GeneratedTextColumn(
+      'employee_i_d',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _attendanceCountMeta =
+      const VerificationMeta('attendanceCount');
+  GeneratedIntColumn _attendanceCount;
+  @override
+  GeneratedIntColumn get attendanceCount =>
+      _attendanceCount ??= _constructAttendanceCount();
+  GeneratedIntColumn _constructAttendanceCount() {
+    return GeneratedIntColumn('attendance_count', $tableName, false,
+        defaultValue: const Constant(0));
+  }
+
+  final VerificationMeta _lastAttendanceMeta =
+      const VerificationMeta('lastAttendance');
+  GeneratedDateTimeColumn _lastAttendance;
+  @override
+  GeneratedDateTimeColumn get lastAttendance =>
+      _lastAttendance ??= _constructLastAttendance();
+  GeneratedDateTimeColumn _constructLastAttendance() {
+    return GeneratedDateTimeColumn(
+      'last_attendance',
+      $tableName,
+      true,
+    );
+  }
+
+  @override
+  List<GeneratedColumn> get $columns =>
+      [employeeID, attendanceCount, lastAttendance];
+  @override
+  $AttendancesTable get asDslTable => this;
+  @override
+  String get $tableName => _alias ?? 'attendances';
+  @override
+  final String actualTableName = 'attendances';
+  @override
+  VerificationContext validateIntegrity(Insertable<Attendance> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('employee_i_d')) {
+      context.handle(
+          _employeeIDMeta,
+          employeeID.isAcceptableOrUnknown(
+              data['employee_i_d'], _employeeIDMeta));
+    } else if (isInserting) {
+      context.missing(_employeeIDMeta);
+    }
+    if (data.containsKey('attendance_count')) {
+      context.handle(
+          _attendanceCountMeta,
+          attendanceCount.isAcceptableOrUnknown(
+              data['attendance_count'], _attendanceCountMeta));
+    }
+    if (data.containsKey('last_attendance')) {
+      context.handle(
+          _lastAttendanceMeta,
+          lastAttendance.isAcceptableOrUnknown(
+              data['last_attendance'], _lastAttendanceMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {employeeID};
+  @override
+  Attendance map(Map<String, dynamic> data, {String tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
+    return Attendance.fromData(data, _db, prefix: effectivePrefix);
+  }
+
+  @override
+  $AttendancesTable createAlias(String alias) {
+    return $AttendancesTable(_db, alias);
+  }
+}
+
 abstract class _$Database extends GeneratedDatabase {
   _$Database(QueryExecutor e) : super(SqlTypeSystem.defaultInstance, e);
   $EmployeesTable _employees;
   $EmployeesTable get employees => _employees ??= $EmployeesTable(this);
+  $AttendancesTable _attendances;
+  $AttendancesTable get attendances => _attendances ??= $AttendancesTable(this);
   @override
   Iterable<TableInfo> get allTables => allSchemaEntities.whereType<TableInfo>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities => [employees];
+  List<DatabaseSchemaEntity> get allSchemaEntities => [employees, attendances];
 }
