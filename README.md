@@ -50,7 +50,7 @@ Example: `List<Employee> _employees = await db.getAllEmployees();` in an `async`
 
 3. Simply Create a `MoorSQLtoCSV` object by passing in the the `List<DataClass>` object as parameter to it (and optionally the CSV file name to save it as) and it will do all the necessary work to export your Database to a CSV file. Example to store `_employees` object of type `Employee table` in `employees.csv`:
 
-        _csvGenerator = MoorSQLToCSV(_employees, csvFileName: 'employees');
+        _csvGenerator = MoorSQLToCSV(_employees, csvFileName: 'employees'); // Date fields will be saved as Iso8601 String.
 
 4. Optionally, access the `wasCreated` member getter of the `MoorSQLtoCSV` object to get a `Future<bool>` stating whether your CSV file was generated and the `pathToCSVDirectory` getter to get the path to the directory where the CSV file was generated, once it's been done.
 
