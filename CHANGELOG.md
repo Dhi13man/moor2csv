@@ -30,4 +30,4 @@ Fix minor bugs with DateTime fields. toString() applied for values before parsin
 
 ## [1.5.2] - 11th November, 2020
 
-Fixed Date-Time saving. Will now be saved to and parsed form in Iso8601String form. Also added new tests to verify it.
+Fixed Date-Time saving. Will now be saved to and parsed from in Iso8601String form. Also added new tests to verify it.
