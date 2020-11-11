@@ -6,6 +6,48 @@ import 'package:moor/moor.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+/// Custom Json Serializer for converting classes to Json before converting to CSV
+class CustomJsonSerializer extends ValueSerializer {
+  const CustomJsonSerializer() : super();
+
+  @override
+
+  /// fromJson remains with same properties as default serializer.
+  T fromJson<T>(dynamic json) {
+    if (json == null) {
+      return null;
+    }
+
+    if (T == DateTime) {
+      return DateTime.parse(json as String) as T;
+    }
+
+    if (T == double && json is int) {
+      return json.toDouble() as T;
+    }
+
+    // blobs are encoded as a regular json array, so we manually convert that to
+    // a Uint8List
+    if (T == Uint8List && json is! Uint8List) {
+      final asList = (json as List).cast<int>();
+      return Uint8List.fromList(asList) as T;
+    }
+
+    return json as T;
+  }
+
+  @override
+
+  /// Override original toJson for DateTime as-is handling.
+  dynamic toJson<T>(T value) {
+    if (value is DateTime) {
+      return value.toString();
+    }
+
+    return value;
+  }
+}
+
 /// Class performing the entire CSV generation process.
 class MoorSQLToCSV {
   final List<DataClass> _table; // Passed as parameter to Class constructor.
@@ -47,18 +89,20 @@ class MoorSQLToCSV {
   /// Simple dart helper function to generate a String [out], which is the body of the generated CSV file.
   String _generateCSVBody() {
     String out = '';
-    Map<String, dynamic> _template = _table[0].toJson();
+    // Set up Custom Json Serializer that can handle Dates as-is.
+    CustomJsonSerializer _serializer = CustomJsonSerializer();
+    Map<String, dynamic> _template = _table[0].toJson(serializer: _serializer);
 
     // Create headings
     _template.forEach((key, value) {
-      out += '\"${key.toString()}\",';
+      out += '\"$key\",';
     });
     out = out.replaceRange(out.length, out.length, '\n');
 
     _table.forEach((element) {
-      _template = element.toJson();
+      _template = element.toJson(serializer: _serializer);
       _template.forEach((key, value) {
-        out += '\"${value.toString()}\",';
+        out += '\"$value\",';
       });
       out = out.replaceRange(out.length, out.length, '\n');
     });
