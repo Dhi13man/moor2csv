@@ -1,6 +1,6 @@
 # moor2csv
 
-Supporting package for Moor, that allows easily **exporting SQL-based Moor database to a CSV form**, for external storage or sharing. Works on all platforms except Web.
+Supporting package for SQL/Moor, that allows easily **exporting SQL-based Moor database to a CSV form**, for external storage or sharing. Works on all platforms except Web.
 
 **Find Package on Official Dart Pub:**
 
