@@ -1,6 +1,6 @@
 name: moor2csv
 description: Supporting package for Moor that allows the easy export of SQL based Moor databases to CSV form, for external storage or sharing. Works on all platforms other than Web.
-version: 1.5.2
+version: 1.5.3
 homepage: https://github.com/Dhi13man/moor2csv
 
 environment:

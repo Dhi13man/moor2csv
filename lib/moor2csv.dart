@@ -119,7 +119,9 @@ class MoorSQLToCSV {
   /// Gets path to permitted file writing directories depending on the OS using path_provider package.
   Future<String> get _localPath async {
     Directory directory;
-    if (Platform.isAndroid || Platform.isIOS)
+    if (Platform.isAndroid)
+      directory = await getExternalStorageDirectory();
+    else if (Platform.isIOS)
       directory = await getApplicationDocumentsDirectory();
     else if (Platform.isLinux || Platform.isWindows || Platform.isMacOS)
       directory = await getDownloadsDirectory();
