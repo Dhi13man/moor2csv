@@ -35,3 +35,7 @@ Fixed Date-Time saving. Will now be saved to and parsed from in Iso8601String fo
 ## [1.5.3] - 25th November, 2020
 
 Seperated path_provider apis for IoS and Android. Fixes bug of generated file not showing in Android.
+
+## [1.5.4] - 23rd May, 2021
+
+Seperated path_provider apis for IoS and Android. Fixes bug of generated file not showing in Android.
