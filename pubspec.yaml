@@ -9,8 +9,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  drift: ^1.0.0
-  path_provider: ^2.0.1
+  drift: ^2.2.0
+  path_provider: ^2.0.11
   permission_handler: ^10.2.0
 
 dev_dependencies:
@@ -18,7 +18,7 @@ dev_dependencies:
     sdk: flutter
 
   # Only For testing and examples. Not needed by package itself to work.
-  drift_dev: ^1.0.0
+  drift_dev: ^2.2.0+1
   sqflite: ^2.2.0+3
   sqlite3_flutter_libs: ^0.5.11+1
   sqflite_common_ffi: ^2.2.0+1

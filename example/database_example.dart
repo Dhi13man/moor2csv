@@ -30,7 +30,7 @@ class Database extends _$Database {
             ..orderBy(
               [
                 (u) {
-                  GeneratedColumn<String?> criteria = employees.employeeID;
+                  Expression<String> criteria = employees.employeeID;
                   final OrderingMode order =
                       (mode == 'desc') ? OrderingMode.desc : OrderingMode.asc;
                   if (orderBy == 'id') {

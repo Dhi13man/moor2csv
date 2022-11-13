@@ -7,6 +7,9 @@ import 'package:moor2csv/moor2csv.dart';
 import 'database_test.dart';
 
 void main() {
+  // Prepare Test Bindings
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   final String _csvFileName = 'table';
   final List<Employee> employees = [
     Employee(employeeID: '1', name: 'testA'),

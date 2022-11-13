@@ -3,7 +3,7 @@
 part of 'database_example.dart';
 
 // **************************************************************************
-// MoorGenerator
+// DriftDatabaseGenerator
 // **************************************************************************
 
 // ignore_for_file: type=lint
@@ -12,32 +12,20 @@ class Employee extends DataClass implements Insertable<Employee> {
   final String? name;
   final int? phoneNo;
   final String? deviceID;
-  Employee({required this.employeeID, this.name, this.phoneNo, this.deviceID});
-  factory Employee.fromData(Map<String, dynamic> data, {String? prefix}) {
-    final effectivePrefix = prefix ?? '';
-    return Employee(
-      employeeID: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}employee_i_d'])!,
-      name: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}name']),
-      phoneNo: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}phone_no']),
-      deviceID: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}device_i_d']),
-    );
-  }
+  const Employee(
+      {required this.employeeID, this.name, this.phoneNo, this.deviceID});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['employee_i_d'] = Variable<String>(employeeID);
     if (!nullToAbsent || name != null) {
-      map['name'] = Variable<String?>(name);
+      map['name'] = Variable<String>(name);
     }
     if (!nullToAbsent || phoneNo != null) {
-      map['phone_no'] = Variable<int?>(phoneNo);
+      map['phone_no'] = Variable<int>(phoneNo);
     }
     if (!nullToAbsent || deviceID != null) {
-      map['device_i_d'] = Variable<String?>(deviceID);
+      map['device_i_d'] = Variable<String>(deviceID);
     }
     return map;
   }
@@ -77,12 +65,15 @@ class Employee extends DataClass implements Insertable<Employee> {
   }
 
   Employee copyWith(
-          {String? employeeID, String? name, int? phoneNo, String? deviceID}) =>
+          {String? employeeID,
+          Value<String?> name = const Value.absent(),
+          Value<int?> phoneNo = const Value.absent(),
+          Value<String?> deviceID = const Value.absent()}) =>
       Employee(
         employeeID: employeeID ?? this.employeeID,
-        name: name ?? this.name,
-        phoneNo: phoneNo ?? this.phoneNo,
-        deviceID: deviceID ?? this.deviceID,
+        name: name.present ? name.value : this.name,
+        phoneNo: phoneNo.present ? phoneNo.value : this.phoneNo,
+        deviceID: deviceID.present ? deviceID.value : this.deviceID,
       );
   @override
   String toString() {
@@ -126,9 +117,9 @@ class EmployeesCompanion extends UpdateCompanion<Employee> {
   }) : employeeID = Value(employeeID);
   static Insertable<Employee> custom({
     Expression<String>? employeeID,
-    Expression<String?>? name,
-    Expression<int?>? phoneNo,
-    Expression<String?>? deviceID,
+    Expression<String>? name,
+    Expression<int>? phoneNo,
+    Expression<String>? deviceID,
   }) {
     return RawValuesInsertable({
       if (employeeID != null) 'employee_i_d': employeeID,
@@ -158,13 +149,13 @@ class EmployeesCompanion extends UpdateCompanion<Employee> {
       map['employee_i_d'] = Variable<String>(employeeID.value);
     }
     if (name.present) {
-      map['name'] = Variable<String?>(name.value);
+      map['name'] = Variable<String>(name.value);
     }
     if (phoneNo.present) {
-      map['phone_no'] = Variable<int?>(phoneNo.value);
+      map['phone_no'] = Variable<int>(phoneNo.value);
     }
     if (deviceID.present) {
-      map['device_i_d'] = Variable<String?>(deviceID.value);
+      map['device_i_d'] = Variable<String>(deviceID.value);
     }
     return map;
   }
@@ -189,26 +180,26 @@ class $EmployeesTable extends Employees
   $EmployeesTable(this.attachedDatabase, [this._alias]);
   final VerificationMeta _employeeIDMeta = const VerificationMeta('employeeID');
   @override
-  late final GeneratedColumn<String?> employeeID = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> employeeID = GeneratedColumn<String>(
       'employee_i_d', aliasedName, false,
-      type: const StringType(), requiredDuringInsert: true);
+      type: DriftSqlType.string, requiredDuringInsert: true);
   final VerificationMeta _nameMeta = const VerificationMeta('name');
   @override
-  late final GeneratedColumn<String?> name = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
       'name', aliasedName, true,
       additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 100),
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: false);
   final VerificationMeta _phoneNoMeta = const VerificationMeta('phoneNo');
   @override
-  late final GeneratedColumn<int?> phoneNo = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> phoneNo = GeneratedColumn<int>(
       'phone_no', aliasedName, true,
-      type: const IntType(), requiredDuringInsert: false);
+      type: DriftSqlType.int, requiredDuringInsert: false);
   final VerificationMeta _deviceIDMeta = const VerificationMeta('deviceID');
   @override
-  late final GeneratedColumn<String?> deviceID = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> deviceID = GeneratedColumn<String>(
       'device_i_d', aliasedName, true,
-      type: const StringType(), requiredDuringInsert: false);
+      type: DriftSqlType.string, requiredDuringInsert: false);
   @override
   List<GeneratedColumn> get $columns => [employeeID, name, phoneNo, deviceID];
   @override
@@ -247,8 +238,17 @@ class $EmployeesTable extends Employees
   Set<GeneratedColumn> get $primaryKey => {employeeID};
   @override
   Employee map(Map<String, dynamic> data, {String? tablePrefix}) {
-    return Employee.fromData(data,
-        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Employee(
+      employeeID: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}employee_i_d'])!,
+      name: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}name']),
+      phoneNo: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}phone_no']),
+      deviceID: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}device_i_d']),
+    );
   }
 
   @override
@@ -258,10 +258,11 @@ class $EmployeesTable extends Employees
 }
 
 abstract class _$Database extends GeneratedDatabase {
-  _$Database(QueryExecutor e) : super(SqlTypeSystem.defaultInstance, e);
+  _$Database(QueryExecutor e) : super(e);
   late final $EmployeesTable employees = $EmployeesTable(this);
   @override
-  Iterable<TableInfo> get allTables => allSchemaEntities.whereType<TableInfo>();
+  Iterable<TableInfo<Table, dynamic>> get allTables =>
+      allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities => [employees];
 }
