@@ -10,7 +10,7 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:sqflite/sqflite.dart' as sql;
 import 'package:sqflite/sqflite.dart' show getDatabasesPath;
 import 'package:path/path.dart' as p;
-import 'database_example.dart';
+import 'example_database.dart';
 
 Future<bool> exportDatabase(Database db, {bool getEmployees = true}) async {
   final DriftSQLToCSV _csvGenerator = DriftSQLToCSV();

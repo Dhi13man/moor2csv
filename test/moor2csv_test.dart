@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:moor2csv/moor2csv.dart';
 
-import 'database_test.dart';
+import 'test_database.dart';
 
 void main() {
   // Prepare Test Bindings

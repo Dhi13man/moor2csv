@@ -8,11 +8,6 @@ import 'package:moor2csv/custom_json_serializer.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-/// MoorSQLToCSV class extending DriftSQLToCSV for backwards compatibility
-class MoorSQLToCSV extends DriftSQLToCSV {
-  MoorSQLToCSV() : super();
-}
-
 /// Class performing the entire CSV generation process.
 class DriftSQLToCSV {
   PermissionStatus _permissionStatus = PermissionStatus.denied;
@@ -153,4 +148,9 @@ class DriftSQLToCSV {
 
     return await thisFile.writeAsString(csvBody);
   }
+}
+
+/// MoorSQLToCSV class extending DriftSQLToCSV for backwards compatibility
+class MoorSQLToCSV extends DriftSQLToCSV {
+  MoorSQLToCSV() : super();
 }
