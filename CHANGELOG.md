@@ -6,7 +6,7 @@ All notable changes to this project will be documented in this file.
 
 - **MAJOR:** Migrated to [Null safety](https://dart.dev/null-safety)
 - **MAJOR:** [Moor to Drift Migration](https://drift.simonbinder.eu/docs/upgrading/#name)
-- **BREAKING:** Changed the previous constructor based usage to use the newly exposed, async-capable `Future<void> writeToCSV` method.
+- **BREAKING:** Changed the previous constructor based usage to use the newly exposed, async-capable `Future<void> writeToCSV(List<DataClass> table, {csvFileName = 'table'})` method.
 - **BREAKING:** Removed all unnecessary boolean `wasCreated`, `permitted` variables. Instead expose the only needed `(PermissionStatus) permissionStatus` enum.
 - All dependencies upgraded to latest versions.
 

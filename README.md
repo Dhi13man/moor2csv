@@ -1,10 +1,10 @@
-# moor2csv
+# drift2csv / moor2csv
 
-Supporting package for SQL/Moor, that allows easily **exporting SQL-based Moor database to a CSV form**, for external storage or sharing. Works on all platforms except Web.
+Supporting package for SQL/Drift/Moor, that allows easily **exporting SQL-based Moor database to a CSV form**, for external storage or sharing. Works on all platforms except Web.
 
 **Find Package on Official Dart Pub:**
 
-[![moor2csv version](https://img.shields.io/pub/v/moor2csv.svg)](https://pub.dev/packages/moor2csv)
+[![drift2csv version](https://img.shields.io/pub/v/moor2csv.svg)](https://pub.dev/packages/moor2csv)
 
 ----
 
@@ -13,46 +13,77 @@ Supporting package for SQL/Moor, that allows easily **exporting SQL-based Moor d
 First, perform necessary steps to provide Storage capability in the device you are developing for.
 Example: Editing `android\app\src\main\AndroidManifest.xml` and [providing permissions](https://developer.android.com/about/versions/11/privacy/permissions) for Android.
 
-1. Set up a Moor Database in your flutter project and create necessary Data Structures and tables. Example:
+1. Set up a Moor/Drift Database in your flutter project and create necessary Data Structures and tables. Example:
 
-        import 'package:moor/moor.dart';
-        import 'package:undo/undo.dart';
+    ```dart
+    class Employees extends Table {
+      TextColumn get employeeID => text()();
+      TextColumn get name => text().withLength(max: 100).nullable()();
+      IntColumn get phoneNo => integer().nullable()();
+      TextColumn get deviceID => text().nullable()();
 
-        // ****** Employee Data Structure for Table *****
-        class Employees extends Table {
-          TextColumn get employeeID => text()();
-          TextColumn get name => text().withLength(max: 100).nullable()();
-          IntColumn get phoneNo => integer().nullable()();
-          TextColumn get deviceID => text().nullable()();
-          @override
-          Set<Column> get primaryKey => {employeeID};
-        }
+      @override
+      Set<Column> get primaryKey => {employeeID};
+    }
 
+    @DriftDatabase(tables: [Employees])
+    class Database extends _$Database {
+      Database(QueryExecutor e) : super(e);
 
-        // ****** Moor Setup ********
+      @override
+      int get schemaVersion => 1;
 
-        part 'Database.g.dart';
-
-        @UseMoor(tables: [Employees])
-        class Database extends _$Database {
-          Database(QueryExecutor e) : super(e);
-          final cs = ChangeStack();
-
-          @override
-          int get schemaVersion => 1;
-
-          Future<List<Employee>> getAllEmployees() => select(employees).get();
-          ...
-        } db;
+      // DATABASE OPERATIONS
+      //EMPLOYEES
+      Future<List<Employee>> getAllEmployees({
+        String orderBy = 'asce',
+        String mode = 'name',
+      }) =>
+          (select(employees)
+                ..orderBy(
+                  [
+                    (u) {
+                      GeneratedColumn<String?> criteria = employees.employeeID;
+                      final OrderingMode order =
+                          (mode == 'desc') ? OrderingMode.desc : OrderingMode.asc;
+                      if (orderBy == 'id') {
+                        criteria = employees.employeeID;
+                      } else if (orderBy == 'name') {
+                        criteria = employees.name;
+                      } else if (orderBy == 'device') {
+                        criteria = employees.deviceID;
+                      }
+                      return OrderingTerm(expression: criteria, mode: order);
+                    }
+                  ],
+                ))
+              .get();
+    }
+    ```
 
 2. Run a query to get your `List<DataClass>` item from the Database.  
 Example: `List<Employee> _employees = await db.getAllEmployees();` in an `async` function gets us our `List<DataClass>` item from database `db`.
 
-3. Simply Create a `MoorSQLtoCSV` object by passing in the the `List<DataClass>` object as parameter to it (and optionally the CSV file name to save it as) and it will do all the necessary work to export your Database to a CSV file. Example to store `_employees` object of type `Employee table` in `employees.csv`:
+3. Simply Create a `DriftSQLToCSV` object and then use the `writeToCSV()` method by passing in the the `List<DataClass>` object as parameter to it (and optionally the CSV file name to save it as):
 
-        _csvGenerator = MoorSQLToCSV(_employees, csvFileName: 'employees'); // Date fields will be saved as Iso8601 String.
+    ```dart
+    // Assuming Employee is a DataClass
+    final List<Employee> employees = [
+        Employee(employeeID: '1', name: 'testA'),
+        Employee(employeeID: '2', name: 'tenstB', phoneNo: 1203123112),
+        Employee(employeeID: '3', name: 'temstC', deviceID: 'testDevice'),
+        Employee(
+            employeeID: '4', name: 'test,D', phoneNo: 132123124, deviceID: 's'),
+      ]; // Replaced with values from database in actual implementation using select query get()
 
-4. Optionally, access the `wasCreated` member getter of the `MoorSQLtoCSV` object to get a `Future<bool>` stating whether your CSV file was generated and the `pathToCSVDirectory` getter to get the path to the directory where the CSV file was generated, once it's been done.
+    // Using DriftSQLToCSV
+    final DriftSQLToCSV DriftSQLToCSV = DriftSQLToCSV();
+    await DriftSQLToCSV.writeToCSV(_employees, csvFileName: 'employees');
+    ```
+
+    It will do all the necessary work to export your Database to a CSV file. Example to store `_employees` object of type `Employee table` in `employees.csv`
+
+4. Optionally, access the `wasCreated` member getter of the `DriftSQLToCSV` object to get a `Future<bool>` stating whether your CSV file was generated and the `pathToCSVDirectory` getter to get the path to the directory where the CSV file was generated, once it's been done.
 
 5. If the Database was successfully created, you will find it in:
 
@@ -64,33 +95,18 @@ Example: `List<Employee> _employees = await db.getAllEmployees();` in an `async`
 
 ## Dependencies
 
-1. [Moor](https://pub.dev/packages/moor) (with Tables and DataClasses ready). (Moor requires dependencies like `moor_generator` and `build_runner` for full functioning. Make sure you are familiar before using this package)
+1. [Moor/Drift](https://drift.simonbinder.eu/) (with Tables and DataClasses ready). (Moor requires dependencies like `moor_generator` and `build_runner` for full functioning. Make sure you are familiar before using this package)
 2. [Path Provider](https://pub.dev/packages/path_provider): To provide paths to Download folder (in desktop) and App Internal Storage Directory (in Mobile platforms) which are the only places storage of files is allowed
 3. [Permission Handler](https://pub.dev/packages/permission_handler): To provide Storage read/write permission on Mobile devices. Moor itself requires it too.
 4. Also uses `dart:io` library for file handling.
 
 ## Available Methods
 
-**1. MoorSQLToCSV (Class constuctor):** Call it with `List<DataClass>` parameter to directly generate CSV from it.
+**1. DriftSQLToCSV (Class constuctor):** To create a DriftSQLToCSV object.
 
-    Optional Parameter csvFileName: Provides the file name to save the generated file as (with extension .csv).
+**2. writeToCSV (Method):** To write the CSV file to the device's storage. Returns a `Future<File>` object of the CSV file created.
 
-**2. wasCreated (getter):** `Future<bool>` signifying whether the file was succesfully created.
-
-**3. pathToCSVDirectory (getter):** Gives the path to directory where generated file is stored.
-
-## Example Usage
-
-    Future<bool> exportDatabase() async {
-      bool didSucceed = false;
-      List<Employee>_employees = await db.getAllEmployees();
-
-      if (_employees.isNotEmpty) {
-        MoorSQLToCSV _csvGenerator = MoorSQLToCSV(_employees, csvFileName: 'employees');
-        didSucceed = await_csvGenerator.wasCreated;
-      }
-      return didSucceed;
-    }
+**3. permissionStatus / hasFileWritePermission (Getter):** To get the current permission status of the app to write to storage.
 
 ----
 

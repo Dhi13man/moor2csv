@@ -9,12 +9,12 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:sqflite/sqflite.dart' as sql;
 import 'package:sqflite/sqflite.dart' show getDatabasesPath;
 import 'package:path/path.dart' as p;
-import 'database_test.dart';
+import 'database_example.dart';
 
 import 'package:moor2csv/moor2csv.dart';
 
 Future<bool> exportDatabase(Database db, {bool getEmployees = true}) async {
-  final MoorSQLToCSV _csvGenerator = MoorSQLToCSV();
+  final DriftSQLToCSV _csvGenerator = DriftSQLToCSV();
   bool didSucceed = false;
   if (getEmployees) {
     final List<Employee> _employees = await db.getAllEmployees(orderBy: 'id');

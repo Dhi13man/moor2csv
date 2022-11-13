@@ -19,12 +19,12 @@ void main() {
   test(
       'Tries creating CSV file with desktop settings (since debugging in pure dart)',
       () async {
-    await MoorSQLToCSV().writeToCSV(employees, csvFileName: _csvFileName);
+    await DriftSQLToCSV().writeToCSV(employees, csvFileName: _csvFileName);
   });
 
   // Test if CSV file actually created
   test('Checks if generated files actually exist', () async {
-    await MoorSQLToCSV().writeToCSV(employees, csvFileName: _csvFileName);
+    await DriftSQLToCSV().writeToCSV(employees, csvFileName: _csvFileName);
 
     // If internal structure of class working.
     final Directory? _directoryOnDesktop = await getDownloadsDirectory();
@@ -48,7 +48,7 @@ void main() {
           employeeID: '4', name: 'testD', phoneNo: 132123124, deviceID: 's'),
     ]; // Replaced with values from database in actual implementation using select query get()
 
-    await MoorSQLToCSV()
+    await DriftSQLToCSV()
         .writeToCSV(employees, csvFileName: '${_csvFileName}_special');
 
     // Internal structure of class working.
@@ -84,7 +84,7 @@ void main() {
       ),
     ]; // Replaced with values from database in actual implementation using select query get()
 
-    await MoorSQLToCSV()
+    await DriftSQLToCSV()
         .writeToCSV(_attendances, csvFileName: '${_csvFileName}_dated');
 
     // Internal structure of class working.

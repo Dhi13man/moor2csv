@@ -8,8 +8,13 @@ import 'package:moor2csv/custom_json_serializer.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+/// MoorSQLToCSV class extending DriftSQLToCSV for backwards compatibility
+class MoorSQLToCSV extends DriftSQLToCSV {
+  MoorSQLToCSV() : super();
+}
+
 /// Class performing the entire CSV generation process.
-class MoorSQLToCSV {
+class DriftSQLToCSV {
   PermissionStatus _permissionStatus = PermissionStatus.denied;
 
   /// Checks the file write permission status of the app.
@@ -20,7 +25,7 @@ class MoorSQLToCSV {
       _permissionStatus == PermissionStatus.granted;
 
   /// Constructor of the MoorSQLToCSV class that gets the entire process started.
-  MoorSQLToCSV() {
+  DriftSQLToCSV() {
     // Ask for permission to write to storage
     getPermission();
   }
@@ -81,9 +86,10 @@ class MoorSQLToCSV {
   /// written into.
   Future<File> _localFile(
     String fileName, {
+    String? overrideFilePath,
     String initialContent = '',
   }) async {
-    final String path = await _localPath;
+    final String path = overrideFilePath ?? await _localPath;
     final String _pathToFile = '$path/$fileName.csv';
     final File thisFile = File(_pathToFile);
 
@@ -105,15 +111,23 @@ class MoorSQLToCSV {
   /// generate CSV.
   ///
   /// [csvFileName] is the file name that generated CSV is to be stored as
-  Future<void> writeToCSV(
+  ///
+  /// [overrideFilePath] is the path to the directory where the CSV is to be stored. If not provided, the default path is used based on Platform
+  ///
+  /// Returns a [Future<File>] that can be used to perform further operations on the generated CSV file.
+  Future<File> writeToCSV(
     List<DataClass> table, {
-    csvFileName = 'table',
+    String csvFileName = 'table',
+    String? overrideFilePath,
   }) async {
     // Generate the body of the CSV from the passed List<DataClass> _table
     final String csvBody = _generateCSVBody(table);
 
     // Write the file
-    final File? thisFile = await _localFile(csvFileName);
+    final File? thisFile = await _localFile(
+      csvFileName,
+      overrideFilePath: overrideFilePath,
+    );
 
     // Generate File pointer.
     // Occurs when file name is not proper
@@ -136,6 +150,7 @@ class MoorSQLToCSV {
         message: 'Permission not granted',
       );
     }
-    thisFile.writeAsString(csvBody);
+
+    return await thisFile.writeAsString(csvBody);
   }
 }

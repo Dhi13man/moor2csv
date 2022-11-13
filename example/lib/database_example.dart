@@ -1,6 +1,6 @@
 import 'package:drift/drift.dart';
 
-part 'database_test.g.dart'; // For Generation of moor Database
+part 'database_example.g.dart'; // For Generation of moor Database
 
 // Base
 class Employees extends Table {
