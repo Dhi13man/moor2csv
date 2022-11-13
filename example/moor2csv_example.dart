@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:moor/ffi.dart';
-import 'package:moor/moor.dart';
+import 'package:drift/native.dart';
+import 'package:drift/drift.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
@@ -14,13 +14,13 @@ import 'database_test.dart';
 import 'package:moor2csv/moor2csv.dart';
 
 Future<bool> exportDatabase(Database db, {bool getEmployees = true}) async {
-  MoorSQLToCSV _csvGenerator;
-  bool didSucceed = true;
+  final MoorSQLToCSV _csvGenerator = MoorSQLToCSV();
+  bool didSucceed = false;
   if (getEmployees) {
-    List<Employee> _employees = await db.getAllEmployees(orderBy: 'id');
+    final List<Employee> _employees = await db.getAllEmployees(orderBy: 'id');
     if (_employees.isNotEmpty) {
-      _csvGenerator = MoorSQLToCSV(_employees, csvFileName: 'employees');
-      didSucceed = didSucceed && await _csvGenerator.wasCreated;
+      await _csvGenerator.writeToCSV(_employees, csvFileName: 'employees');
+      didSucceed = true;
     }
   }
   return didSucceed;
@@ -41,7 +41,7 @@ Database createDb({bool logStatements = false}) {
     final executor = LazyDatabase(() async {
       final dataDir = await getApplicationDocumentsDirectory();
       final dbFile = File(p.join(dataDir.path, 'db.sqlite'));
-      return VmDatabase(dbFile, logStatements: logStatements);
+      return NativeDatabase(dbFile, logStatements: logStatements);
     });
     return Database(executor);
   }
@@ -49,11 +49,11 @@ Database createDb({bool logStatements = false}) {
     final executor = LazyDatabase(() async {
       final dbFolder = await getDatabasesPath();
       final file = File(p.join(dbFolder, 'db.sqlite'));
-      return VmDatabase(file);
+      return NativeDatabase(file);
     });
     return Database(executor);
   }
-  return Database(VmDatabase.memory(logStatements: logStatements));
+  return Database(NativeDatabase.memory(logStatements: logStatements));
 }
 
 main() async {

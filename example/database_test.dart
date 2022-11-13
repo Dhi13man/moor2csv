@@ -1,4 +1,4 @@
-import 'package:moor/moor.dart';
+import 'package:drift/drift.dart';
 
 part 'database_test.g.dart'; // For Generation of moor Database
 
@@ -13,7 +13,7 @@ class Employees extends Table {
   Set<Column> get primaryKey => {employeeID};
 }
 
-@UseMoor(tables: [Employees])
+@DriftDatabase(tables: [Employees])
 class Database extends _$Database {
   Database(QueryExecutor e) : super(e);
 
@@ -22,19 +22,27 @@ class Database extends _$Database {
 
   // DATABASE OPERATIONS
   //EMPLOYEES
-  Future<List<Employee>> getAllEmployees(
-      {String orderBy = 'asce', String mode = 'name'}) =>
+  Future<List<Employee>> getAllEmployees({
+    String orderBy = 'asce',
+    String mode = 'name',
+  }) =>
       (select(employees)
-        ..orderBy([
-              (u) {
-            GeneratedTextColumn criteria = employees.employeeID;
-            OrderingMode order =
-            (mode == 'desc') ? OrderingMode.desc : OrderingMode.asc;
-            if (orderBy == 'id') criteria = employees.employeeID;
-            if (orderBy == 'name') criteria = employees.name;
-            if (orderBy == 'device') criteria = employees.deviceID;
-            return OrderingTerm(expression: criteria, mode: order);
-          }
-        ]))
+            ..orderBy(
+              [
+                (u) {
+                  GeneratedColumn<String?> criteria = employees.employeeID;
+                  final OrderingMode order =
+                      (mode == 'desc') ? OrderingMode.desc : OrderingMode.asc;
+                  if (orderBy == 'id') {
+                    criteria = employees.employeeID;
+                  } else if (orderBy == 'name') {
+                    criteria = employees.name;
+                  } else if (orderBy == 'device') {
+                    criteria = employees.deviceID;
+                  }
+                  return OrderingTerm(expression: criteria, mode: order);
+                }
+              ],
+            ))
           .get();
 }

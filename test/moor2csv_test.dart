@@ -7,9 +7,8 @@ import 'package:moor2csv/moor2csv.dart';
 import 'database_test.dart';
 
 void main() {
-  String _csvFileName = 'table';
-
-  List<Employee> employees = [
+  final String _csvFileName = 'table';
+  final List<Employee> employees = [
     Employee(employeeID: '1', name: 'testA'),
     Employee(employeeID: '2', name: 'tenstB', phoneNo: 1203123112),
     Employee(employeeID: '3', name: 'temstC', deviceID: 'testDevice'),
@@ -20,24 +19,20 @@ void main() {
   test(
       'Tries creating CSV file with desktop settings (since debugging in pure dart)',
       () async {
-    final csvGen = MoorSQLToCSV(employees, csvFileName: _csvFileName);
-    // Test if internal structure of class working.
-    bool wasCreated = await csvGen.wasCreated;
-    expect(wasCreated, true);
+    await MoorSQLToCSV().writeToCSV(employees, csvFileName: _csvFileName);
   });
 
   // Test if CSV file actually created
   test('Checks if generated files actually exist', () async {
-    final csvGen = MoorSQLToCSV(employees, csvFileName: _csvFileName);
+    await MoorSQLToCSV().writeToCSV(employees, csvFileName: _csvFileName);
 
     // If internal structure of class working.
-    await csvGen.wasCreated;
-    Directory _directoryOnDesktop = await getDownloadsDirectory();
-    // Test if File actually generated
-    String fullPath = '${_directoryOnDesktop.path}/$_csvFileName.csv';
-    File testFilePointer = File(fullPath);
+    final Directory? _directoryOnDesktop = await getDownloadsDirectory();
 
-    bool doesExist = await testFilePointer.exists();
+    // Test if File actually generated
+    final String fullPath = '${_directoryOnDesktop?.path}/$_csvFileName.csv';
+    final File testFilePointer = File(fullPath);
+    final bool doesExist = await testFilePointer.exists();
     expect(doesExist, true);
   });
 
@@ -45,7 +40,7 @@ void main() {
   test(
       'Checks if CSV Properly Generated when fields contain special characters.',
       () async {
-    List<Employee> employees = [
+    final List<Employee> employees = [
       Employee(employeeID: '1', name: 'te,,'),
       Employee(employeeID: '2', name: 'tekjkn,/-,stB', phoneNo: 1203123112),
       Employee(employeeID: '3', name: 't:em-tC', deviceID: 'te;;/st,De,vice'),
@@ -53,17 +48,17 @@ void main() {
           employeeID: '4', name: 'testD', phoneNo: 132123124, deviceID: 's'),
     ]; // Replaced with values from database in actual implementation using select query get()
 
-    final csvGen =
-        MoorSQLToCSV(employees, csvFileName: '${_csvFileName}_special');
+    await MoorSQLToCSV()
+        .writeToCSV(employees, csvFileName: '${_csvFileName}_special');
 
     // Internal structure of class working.
-    await csvGen.wasCreated;
-    Directory _directoryOnDesktop = await getDownloadsDirectory();
-    // Test if File actually generated
-    String fullPath = '${_directoryOnDesktop.path}/${_csvFileName}_special.csv';
-    File testFilePointer = File(fullPath);
+    final Directory? _directoryOnDesktop = await getDownloadsDirectory();
 
-    bool doesExist = await testFilePointer.exists();
+    // Test if File actually generated
+    final String fullPath =
+        '${_directoryOnDesktop?.path}/${_csvFileName}_special.csv';
+    final File testFilePointer = File(fullPath);
+    final bool doesExist = await testFilePointer.exists();
     expect(doesExist, true);
   });
 
@@ -71,7 +66,7 @@ void main() {
   test(
       'Checks if CSVs save Date Time exactly to Iso8601 String, from what they are in Classes.',
       () async {
-    List<Attendance> _attendances = [
+    final List<Attendance> _attendances = [
       Attendance(
         employeeID: '1',
         attendanceCount: 1,
@@ -89,17 +84,17 @@ void main() {
       ),
     ]; // Replaced with values from database in actual implementation using select query get()
 
-    final csvGen =
-        MoorSQLToCSV(_attendances, csvFileName: '${_csvFileName}_dated');
+    await MoorSQLToCSV()
+        .writeToCSV(_attendances, csvFileName: '${_csvFileName}_dated');
 
     // Internal structure of class working.
-    await csvGen.wasCreated;
-    Directory _directoryOnDesktop = await getDownloadsDirectory();
-    // Test if File actually generated
-    String fullPath = '${_directoryOnDesktop.path}/${_csvFileName}_dated.csv';
-    File testFilePointer = File(fullPath);
+    final Directory? _directoryOnDesktop = await getDownloadsDirectory();
 
-    bool doesExist = await testFilePointer.exists();
+    // Test if File actually generated
+    final String fullPath =
+        '${_directoryOnDesktop?.path}/${_csvFileName}_dated.csv';
+    final File testFilePointer = File(fullPath);
+    final bool doesExist = await testFilePointer.exists();
     expect(doesExist, true);
   });
 
