@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:drift/native.dart';
 import 'package:drift/drift.dart';
+import 'package:moor2csv/moor2csv.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
@@ -10,8 +11,6 @@ import 'package:sqflite/sqflite.dart' as sql;
 import 'package:sqflite/sqflite.dart' show getDatabasesPath;
 import 'package:path/path.dart' as p;
 import 'database_example.dart';
-
-import 'package:moor2csv/moor2csv.dart';
 
 Future<bool> exportDatabase(Database db, {bool getEmployees = true}) async {
   final DriftSQLToCSV _csvGenerator = DriftSQLToCSV();
