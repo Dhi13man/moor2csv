@@ -83,7 +83,7 @@ Example: `List<Employee> _employees = await db.getAllEmployees();` in an `async`
 
     It will do all the necessary work to export your Database to a CSV file. Example to store `_employees` object of type `Employee table` in `employees.csv`
 
-4. Optionally, access the `wasCreated` member getter of the `DriftSQLToCSV` object to get a `Future<bool>` stating whether your CSV file was generated and the `pathToCSVDirectory` getter to get the path to the directory where the CSV file was generated, once it's been done.
+4. The method also returns a `Future<File>` object that can be used to perform further operations on the saved CSV.
 
 5. If the Database was successfully created, you will find it in:
 
