@@ -1,12 +1,22 @@
 # drift2csv / moor2csv
 
+[![License](https://img.shields.io/github/license/dhi13man/moor2csv)](https://github.com/Dhi13man/moor2csv/blob/main/LICENSE)
+[![Language](https://img.shields.io/badge/language-Dart-blue.svg)](https://dart.dev)
+[![Language](https://img.shields.io/badge/language-Flutter-blue.svg)](https://flutter.dev)
+[![Contributors](https://img.shields.io/github/contributors-anon/dhi13man/moor2csv?style=flat)](https://github.com/Dhi13man/moor2csv/graphs/contributors)
+[![GitHub forks](https://img.shields.io/github/forks/dhi13man/moor2csv?style=social)](https://github.com/Dhi13man/moor2csv/network/members)
+[![GitHub Repo stars](https://img.shields.io/github/stars/dhi13man/moor2csv?style=social)](https://github.com/Dhi13man/moor2csv/stargazers)
+[![Last Commit](https://img.shields.io/github/last-commit/dhi13man/moor2csv)](https://github.com/Dhi13man/moor2csv/commits/main)
+[![Build, Format](https://github.com/Dhi13man/moor2csv/actions/workflows/flutter.yml/badge.svg)](https://github.com/Dhi13man/moor2csv/actions)
+[![moor2csv version](https://img.shields.io/pub/v/moor2csv.svg)](https://pub.dev/packages/moor2csv)
+
+[!["Buy Me A Coffee"](https://img.buymeacoffee.com/button-api/?text=Buy%20me%20an%20Ego%20boost&emoji=%F0%9F%98%B3&slug=dhi13man&button_colour=FF5F5F&font_colour=ffffff&font_family=Lato&outline_colour=000000&coffee_colour=FFDD00****)](https://www.buymeacoffee.com/dhi13man)
+
 Supporting package for SQL/Drift/Moor, that allows easily **exporting SQL-based Moor database to a CSV form**, for external storage or sharing. Works on all platforms except Web.
 
 **Find Package on Official Dart Pub:**
 
 [![drift2csv version](https://img.shields.io/pub/v/moor2csv.svg)](https://pub.dev/packages/moor2csv)
-
-----
 
 ## Usage Steps
 
@@ -91,8 +101,6 @@ Example: `List<Employee> _employees = await db.getAllEmployees();` in an `async`
 
     b. **Desktop Systems:** Downloads Directory.
 
-----
-
 ## Dependencies
 
 1. [Moor/Drift](https://drift.simonbinder.eu/) (with Tables and DataClasses ready). (Moor requires dependencies like `moor_generator` and `build_runner` for full functioning. Make sure you are familiar before using this package)
@@ -107,8 +115,6 @@ Example: `List<Employee> _employees = await db.getAllEmployees();` in an `async`
 **2. writeToCSV (Method):** To write the CSV file to the device's storage. Returns a `Future<File>` object of the CSV file created.
 
 **3. permissionStatus / hasFileWritePermission (Getter):** To get the current permission status of the app to write to storage.
-
-----
 
 ## Potential Contribution Ideas
 
