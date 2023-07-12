@@ -60,20 +60,19 @@ class DriftSQLToCSV {
       return _permissionStatus = PermissionStatus.granted;
     }
 
-    PermissionStatus storagePermission;
     // added sdk specifics since new break change to permissions type. Ref from Permission Handler FAQ :
     // https://github.com/Baseflow/flutter-permission-handler/blob/main/permission_handler/README.md
     if (Platform.isAndroid) {
       final deviceInfo = await DeviceInfoPlugin().androidInfo;
       if (deviceInfo.version.sdkInt > 32) {
-        storagePermission = await Permission.photos.request();
+        _permissionStatus = await Permission.photos.request();
       } else {
-        storagePermission = await Permission.storage.request();
+        _permissionStatus = await Permission.storage.request();
       }
     } else {
-      storagePermission = await Permission.storage.request();
+      _permissionStatus = await Permission.storage.request();
     }
-    return storagePermission;
+    return _permissionStatus;
   }
 
   /// Gets path to permitted file writing directories depending on the OS using
