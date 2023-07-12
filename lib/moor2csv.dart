@@ -2,6 +2,7 @@ library moor2csv;
 
 import 'dart:io';
 
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:drift/drift.dart';
 import 'package:flutter/services.dart';
 import 'package:moor2csv/custom_json_serializer.dart';
@@ -58,7 +59,21 @@ class DriftSQLToCSV {
     if (!Platform.isIOS && !Platform.isAndroid) {
       return _permissionStatus = PermissionStatus.granted;
     }
-    return _permissionStatus = await Permission.storage.request();
+
+    PermissionStatus storagePermission;
+    // added sdk specifics since new break change to permissions type. Ref from Permission Handler FAQ :
+    // https://github.com/Baseflow/flutter-permission-handler/blob/main/permission_handler/README.md
+    if (Platform.isAndroid) {
+      final deviceInfo = await DeviceInfoPlugin().androidInfo;
+      if (deviceInfo.version.sdkInt > 32) {
+        storagePermission = await Permission.photos.request();
+      } else {
+        storagePermission = await Permission.storage.request();
+      }
+    } else {
+      storagePermission = await Permission.storage.request();
+    }
+    return permissionStatus;
   }
 
   /// Gets path to permitted file writing directories depending on the OS using
