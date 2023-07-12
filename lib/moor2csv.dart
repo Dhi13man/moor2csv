@@ -73,7 +73,7 @@ class DriftSQLToCSV {
     } else {
       storagePermission = await Permission.storage.request();
     }
-    return permissionStatus;
+    return storagePermission;
   }
 
   /// Gets path to permitted file writing directories depending on the OS using
