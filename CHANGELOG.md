@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.0.1] - 12th July, 2023
+
+- Upgraded dependencies to latest versions.
+- Integrated changes as per [#1](https://github.com/Dhi13man/moor2csv/pull/1) by [AtzeniMichele](https://github.com/AtzeniMichele) for Android permissions.
+
 ## [2.0.0] - 13th November, 2022
 
 - **MAJOR:** Migrated to [Null safety](https://dart.dev/null-safety)

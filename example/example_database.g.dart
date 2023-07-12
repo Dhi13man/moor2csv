@@ -2,11 +2,95 @@
 
 part of 'example_database.dart';
 
-// **************************************************************************
-// DriftDatabaseGenerator
-// **************************************************************************
-
 // ignore_for_file: type=lint
+class $EmployeesTable extends Employees
+    with TableInfo<$EmployeesTable, Employee> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $EmployeesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _employeeIDMeta =
+      const VerificationMeta('employeeID');
+  @override
+  late final GeneratedColumn<String> employeeID = GeneratedColumn<String>(
+      'employee_i_d', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+      'name', aliasedName, true,
+      additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 100),
+      type: DriftSqlType.string,
+      requiredDuringInsert: false);
+  static const VerificationMeta _phoneNoMeta =
+      const VerificationMeta('phoneNo');
+  @override
+  late final GeneratedColumn<int> phoneNo = GeneratedColumn<int>(
+      'phone_no', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _deviceIDMeta =
+      const VerificationMeta('deviceID');
+  @override
+  late final GeneratedColumn<String> deviceID = GeneratedColumn<String>(
+      'device_i_d', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns => [employeeID, name, phoneNo, deviceID];
+  @override
+  String get aliasedName => _alias ?? 'employees';
+  @override
+  String get actualTableName => 'employees';
+  @override
+  VerificationContext validateIntegrity(Insertable<Employee> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('employee_i_d')) {
+      context.handle(
+          _employeeIDMeta,
+          employeeID.isAcceptableOrUnknown(
+              data['employee_i_d']!, _employeeIDMeta));
+    } else if (isInserting) {
+      context.missing(_employeeIDMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
+    }
+    if (data.containsKey('phone_no')) {
+      context.handle(_phoneNoMeta,
+          phoneNo.isAcceptableOrUnknown(data['phone_no']!, _phoneNoMeta));
+    }
+    if (data.containsKey('device_i_d')) {
+      context.handle(_deviceIDMeta,
+          deviceID.isAcceptableOrUnknown(data['device_i_d']!, _deviceIDMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {employeeID};
+  @override
+  Employee map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Employee(
+      employeeID: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}employee_i_d'])!,
+      name: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}name']),
+      phoneNo: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}phone_no']),
+      deviceID: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}device_i_d']),
+    );
+  }
+
+  @override
+  $EmployeesTable createAlias(String alias) {
+    return $EmployeesTable(attachedDatabase, alias);
+  }
+}
+
 class Employee extends DataClass implements Insertable<Employee> {
   final String employeeID;
   final String? name;
@@ -103,29 +187,34 @@ class EmployeesCompanion extends UpdateCompanion<Employee> {
   final Value<String?> name;
   final Value<int?> phoneNo;
   final Value<String?> deviceID;
+  final Value<int> rowid;
   const EmployeesCompanion({
     this.employeeID = const Value.absent(),
     this.name = const Value.absent(),
     this.phoneNo = const Value.absent(),
     this.deviceID = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   EmployeesCompanion.insert({
     required String employeeID,
     this.name = const Value.absent(),
     this.phoneNo = const Value.absent(),
     this.deviceID = const Value.absent(),
+    this.rowid = const Value.absent(),
   }) : employeeID = Value(employeeID);
   static Insertable<Employee> custom({
     Expression<String>? employeeID,
     Expression<String>? name,
     Expression<int>? phoneNo,
     Expression<String>? deviceID,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (employeeID != null) 'employee_i_d': employeeID,
       if (name != null) 'name': name,
       if (phoneNo != null) 'phone_no': phoneNo,
       if (deviceID != null) 'device_i_d': deviceID,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
@@ -133,12 +222,14 @@ class EmployeesCompanion extends UpdateCompanion<Employee> {
       {Value<String>? employeeID,
       Value<String?>? name,
       Value<int?>? phoneNo,
-      Value<String?>? deviceID}) {
+      Value<String?>? deviceID,
+      Value<int>? rowid}) {
     return EmployeesCompanion(
       employeeID: employeeID ?? this.employeeID,
       name: name ?? this.name,
       phoneNo: phoneNo ?? this.phoneNo,
       deviceID: deviceID ?? this.deviceID,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -157,6 +248,9 @@ class EmployeesCompanion extends UpdateCompanion<Employee> {
     if (deviceID.present) {
       map['device_i_d'] = Variable<String>(deviceID.value);
     }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
     return map;
   }
 
@@ -166,94 +260,10 @@ class EmployeesCompanion extends UpdateCompanion<Employee> {
           ..write('employeeID: $employeeID, ')
           ..write('name: $name, ')
           ..write('phoneNo: $phoneNo, ')
-          ..write('deviceID: $deviceID')
+          ..write('deviceID: $deviceID, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
-  }
-}
-
-class $EmployeesTable extends Employees
-    with TableInfo<$EmployeesTable, Employee> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $EmployeesTable(this.attachedDatabase, [this._alias]);
-  final VerificationMeta _employeeIDMeta = const VerificationMeta('employeeID');
-  @override
-  late final GeneratedColumn<String> employeeID = GeneratedColumn<String>(
-      'employee_i_d', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  final VerificationMeta _nameMeta = const VerificationMeta('name');
-  @override
-  late final GeneratedColumn<String> name = GeneratedColumn<String>(
-      'name', aliasedName, true,
-      additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 100),
-      type: DriftSqlType.string,
-      requiredDuringInsert: false);
-  final VerificationMeta _phoneNoMeta = const VerificationMeta('phoneNo');
-  @override
-  late final GeneratedColumn<int> phoneNo = GeneratedColumn<int>(
-      'phone_no', aliasedName, true,
-      type: DriftSqlType.int, requiredDuringInsert: false);
-  final VerificationMeta _deviceIDMeta = const VerificationMeta('deviceID');
-  @override
-  late final GeneratedColumn<String> deviceID = GeneratedColumn<String>(
-      'device_i_d', aliasedName, true,
-      type: DriftSqlType.string, requiredDuringInsert: false);
-  @override
-  List<GeneratedColumn> get $columns => [employeeID, name, phoneNo, deviceID];
-  @override
-  String get aliasedName => _alias ?? 'employees';
-  @override
-  String get actualTableName => 'employees';
-  @override
-  VerificationContext validateIntegrity(Insertable<Employee> instance,
-      {bool isInserting = false}) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('employee_i_d')) {
-      context.handle(
-          _employeeIDMeta,
-          employeeID.isAcceptableOrUnknown(
-              data['employee_i_d']!, _employeeIDMeta));
-    } else if (isInserting) {
-      context.missing(_employeeIDMeta);
-    }
-    if (data.containsKey('name')) {
-      context.handle(
-          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
-    }
-    if (data.containsKey('phone_no')) {
-      context.handle(_phoneNoMeta,
-          phoneNo.isAcceptableOrUnknown(data['phone_no']!, _phoneNoMeta));
-    }
-    if (data.containsKey('device_i_d')) {
-      context.handle(_deviceIDMeta,
-          deviceID.isAcceptableOrUnknown(data['device_i_d']!, _deviceIDMeta));
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {employeeID};
-  @override
-  Employee map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return Employee(
-      employeeID: attachedDatabase.options.types
-          .read(DriftSqlType.string, data['${effectivePrefix}employee_i_d'])!,
-      name: attachedDatabase.options.types
-          .read(DriftSqlType.string, data['${effectivePrefix}name']),
-      phoneNo: attachedDatabase.options.types
-          .read(DriftSqlType.int, data['${effectivePrefix}phone_no']),
-      deviceID: attachedDatabase.options.types
-          .read(DriftSqlType.string, data['${effectivePrefix}device_i_d']),
-    );
-  }
-
-  @override
-  $EmployeesTable createAlias(String alias) {
-    return $EmployeesTable(attachedDatabase, alias);
   }
 }
 
@@ -261,7 +271,7 @@ abstract class _$Database extends GeneratedDatabase {
   _$Database(QueryExecutor e) : super(e);
   late final $EmployeesTable employees = $EmployeesTable(this);
   @override
-  Iterable<TableInfo<Table, dynamic>> get allTables =>
+  Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities => [employees];
