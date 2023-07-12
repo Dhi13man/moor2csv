@@ -7,7 +7,7 @@
 [![GitHub forks](https://img.shields.io/github/forks/dhi13man/moor2csv?style=social)](https://github.com/Dhi13man/moor2csv/network/members)
 [![GitHub Repo stars](https://img.shields.io/github/stars/dhi13man/moor2csv?style=social)](https://github.com/Dhi13man/moor2csv/stargazers)
 [![Last Commit](https://img.shields.io/github/last-commit/dhi13man/moor2csv)](https://github.com/Dhi13man/moor2csv/commits/main)
-[![Build, Format](https://github.com/Dhi13man/moor2csv/actions/workflows/flutter.yml/badge.svg)](https://github.com/Dhi13man/moor2csv/actions)
+[![Flutter Format, Analyse](https://github.com/Dhi13man/moor2csv/actions/workflows/flutter.yml/badge.svg)](https://github.com/Dhi13man/moor2csv/actions)
 [![moor2csv version](https://img.shields.io/pub/v/moor2csv.svg)](https://pub.dev/packages/moor2csv)
 
 [!["Buy Me A Coffee"](https://img.buymeacoffee.com/button-api/?text=Buy%20me%20an%20Ego%20boost&emoji=%F0%9F%98%B3&slug=dhi13man&button_colour=FF5F5F&font_colour=ffffff&font_family=Lato&outline_colour=000000&coffee_colour=FFDD00****)](https://www.buymeacoffee.com/dhi13man)
