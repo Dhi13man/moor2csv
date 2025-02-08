@@ -116,8 +116,7 @@ class DriftSQLToCSV {
 
   /// Final writing is done by this member.
   ///
-  /// Pass [table] is a List<DataClass> that the utility iterates over, to
-  /// generate CSV.
+  /// Pass [table] is a list that the utility iterates over, to generate CSV.
   ///
   /// [csvFileName] is the file name that generated CSV is to be stored as
   ///
@@ -129,7 +128,7 @@ class DriftSQLToCSV {
     String csvFileName = 'table',
     String? overrideFilePath,
   }) async {
-    // Generate the body of the CSV from the passed List<DataClass> _table
+    // Generate the body of the CSV from the passed list _table
     final String csvBody = _generateCSVBody(table);
 
     // Write the file
