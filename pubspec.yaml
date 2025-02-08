@@ -1,6 +1,6 @@
 name: moor2csv
-description: Supporting package for SQL or Drift/Moor that allows the easy export of SQL based Moor databases to CSV form, for external storage or sharing. Works on all platforms other than Web.
-version: 2.0.1
+description: Supporting package for SQL or Drift/Moor that allows the easy export of SQL based Moor databases to CSV form.
+version: 2.0.2
 homepage: https://github.com/Dhi13man/moor2csv
 
 environment:
@@ -9,17 +9,17 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  drift: ^2.2.0
-  path_provider: ^2.0.11
-  permission_handler: ^10.4.1
-  device_info_plus: ^9.0.2
+  drift: ^2.24.0
+  path_provider: ^2.1.5
+  permission_handler: ^11.3.1
+  device_info_plus: ^11.3.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
   # Only For testing and examples. Not needed by package itself to work.
-  drift_dev: ^2.2.0+1
+  drift_dev: ^2.24.0+1
   sqflite: ^2.2.0+3
   sqlite3_flutter_libs: ^0.5.11+1
   sqflite_common_ffi: ^2.2.0+1
@@ -27,6 +27,3 @@ dev_dependencies:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
-
-# The following section is specific to Flutter.
-flutter:
