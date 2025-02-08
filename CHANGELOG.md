@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.0.2] - 9th February, 2025
+
+- Upgraded dependencies to latest versions.
+- Solved issues reported by pub.dev
+
 ## [2.0.1] - 12th July, 2023
 
 - Upgraded dependencies to latest versions.
